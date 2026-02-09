@@ -115,25 +115,85 @@ $$\mathbf{M} = \begin{bmatrix} 1 & 0 \\ 0 & 1 \end{bmatrix}.$$
 # Question 1
 Let's transform $\mathbf{M}$ to demonstrate an interesting linear algebra property.
 
+
+
 ## Part a
 Create the matrix `A` in `R`.
 $$\mathbf{A} = \begin{bmatrix} 1 & -7 \\ 5 & 9 \end{bmatrix}$$
+
+**Solution**
+```{r}
+A <- matrix(c(1, 5, -7, 9), nrow = 2, ncol = 2)
+```
 
 ## Part b
 Compute the product below in `R` and store it in an object `T`.
 $$\mathbf{T} = \mathbf{A}\mathbf{M}.$$
 
+
+**Solution**
+```{r}
+M <- matrix(c(1, 0, 0, 1), nrow = 2, ncol = 2)
+T <- A %*% M
+```
+
 ## Part c
 Create `basis.vector.1` (first column of `T`) and `basis.vector.2` (second column of `T`) in `R`.
+
+**Solution**
+```{r}
+basis.vector.1 <- T[, 1]
+basis.vector.2 <- T[, 2]
+
+```
 
 ## Part d
 Compute the points $p_0$, $p_1$, $p_2$, and $p_3$.
 
+**Solution**
+```{r}
+p0 <- c(0, 0)
+p1 <- basis.vector.1
+p2 <- basis.vector.1 + basis.vector.2
+p3 <- basis.vector.2
+
+```
+
 ## Part e
 Copy and paste the code for the unit square. Edit the code to draw the segments that form the boundary based on the points in Part d.
 
+**Solution**
+```{r}
+#| label: fig-q1e
+#| fig-cap: "Transformed unit square for Question 1."
+#| fig-width: 3
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+ggplot() +
+  geom_segment(aes(x = p0[1], y = p0[2], xend = p1[1], yend = p1[2])) +
+  geom_segment(aes(x = p1[1], y = p1[2], xend = p2[1], yend = p2[2])) +
+  geom_segment(aes(x = p2[1], y = p2[2], xend = p3[1], yend = p3[2])) +
+  geom_segment(aes(x = p3[1], y = p3[2], xend = p0[1], yend = p0[2])) +
+  theme_bw() +
+  xlim(-15, 15) +
+  ylim(-5, 25) +
+  labs(x = "x", y = "y")
+
+
+```
+
+
 ## Part f
 Interestingly, the determinant of $\mathbf{A}$ gives us the area of the shape plotted in Part e. Find the determinant of $\mathbf{A}$.
+
+**Solution**
+```{r}
+A  # From Part a: [[1,-7],[5,9]]
+det_A <- det(A)
+det_A
+
+```
 
 # Question 2
 Recomplete Question 1 using a new matrix for $\mathbf{A}$. This matrix is not as well behaved.
@@ -142,23 +202,83 @@ Recomplete Question 1 using a new matrix for $\mathbf{A}$. This matrix is not as
 Create the matrix `A` in `R`.
 $$\mathbf{A} = \begin{bmatrix} 1 & 2 \\ 2 & 4 \end{bmatrix}$$
 
+**Solution**
+```{r}
+A <- matrix(c(1, 2, 2, 4), nrow = 2, ncol = 2, byrow = TRUE)
+A
+
+```
+
 ## Part b
 Compute the product below in `R` and store it in an object `T`.
 $$\mathbf{T} = \mathbf{A}\mathbf{M}.$$
 
+**Solution**
+```{r}
+M <- rbind(c(1,0), c(0,1))  # Identity matrix
+T <- A %*% M
+T
+
+```
+
 ## Part c
 Create `basis.vector.1` (first column of `T`) and `basis.vector.2` (second column of `T`) in `R`.
 
+**Solution**
+```{r}
+basis.vector.1 <- T[,1]
+basis.vector.2 <- T[,2]
+basis.vector.1
+basis.vector.2
+
+```
+
 ## Part d
 Compute the points $p_0$, $p_1$, $p_2$, and $p_3$.
+
+**Solution**
+```{r}
+p0 <- c(0,0)
+p1 <- basis.vector.1
+p2 <- basis.vector.1 + basis.vector.2
+p3 <- basis.vector.2
+p1; p2; p3
+
+```
 
 ## Part e
 Copy and paste the code for plotting the unit square. Edit the code to draw the segments that form the boundary based on the points in Part d.
 
 **Note**: As you continue to plot this here and through question 2, you will find that the $x$ and $y$ limits need to change. Try `xlim(-15,15)` and `ylim(-5, 25)`.
 
+**Solution**
+```{r}
+#| label: fig-q2e
+#| fig-cap: "Degenerate transform (line segment)."
+#| fig-width: 3
+#| fig-height: 3
+#| scale: 0.8
+#| fig-align: center
+ggplot() +
+  geom_segment(aes(x = p0[1], y = p0[2], xend = p1[1], yend = p1[2])) +
+  geom_segment(aes(x = p1[1], y = p1[2], xend = p2[1], yend = p2[2])) +
+  geom_segment(aes(x = p2[1], y = p2[2], xend = p3[1], yend = p3[2])) +
+  geom_segment(aes(x = p3[1], y = p3[2], xend = p0[1], yend = p0[2])) +
+  theme_bw() +
+  xlim(-15,15) +
+  ylim(-5,25) +
+  labs(x = "x", y = "y")
+
+```
+
 ## Part f
 Interestingly, the determinant of $\mathbf{A}$ gives us the area of the shape plotted in Part e. Find the determinant of $\mathbf{A}$.
+
+**Solution**
+```{r}
+det(A)
+
+```
 
 # Question 3
 We can conduct a shear transformation that keeps the area of the shape the same but horizontally or vertically slants the object. 
@@ -171,20 +291,95 @@ and for horizontal slanting
 $$\mathbf{M}_h = \begin{bmatrix} 1 & 0 \\ k & 1 \end{bmatrix}.$$
 In both cases, $k \in \mathbb{R}$ is called a shear factor and its sign determines the direction of the slant and its magnitude determines the severity of the slant.
 
+
+
 ## Part a
 Use the following to generate a new shape. Compare the shape and its area to your answer in Question 1.
 $$\mathbf{M}_v = \begin{bmatrix} 1 & k=0.5 \\ 0 & 1 \end{bmatrix} ~~~~~ \textrm{and} ~~~~~
   \mathbf{A}   = \begin{bmatrix} 1 & -7 \\ 5 & 9 \end{bmatrix}$$
+
+**Solution**
+```{r}
+k <- 0.5
+Mv <- matrix(c(1, k, 0, 1), nrow=2, byrow=TRUE)
+T_v <- A %*% Mv
+basis.vector.1_v <- T_v[,1]
+basis.vector.2_v <- T_v[,2]
+p0 <- c(0,0); p1_v <- basis.vector.1_v; p2_v <- basis.vector.1_v + basis.vector.2_v; p3_v <- basis.vector.2_v
+det(Mv)
+
+#| label: fig-q3a
+#| fig-cap: "Vertical shear."
+#| fig-width: 3.5
+#| fig-height: 3.5
+#| scale: 0.8
+#| fig-align: center
+ggplot() +
+  geom_segment(aes(x=p0[1],y=p0[2],xend=p1_v[1],yend=p1_v[2])) +
+  geom_segment(aes(x=p1_v[1],y=p1_v[2],xend=p2_v[1],yend=p2_v[2])) +
+  geom_segment(aes(x=p2_v[1],y=p2_v[2],xend=p3_v[1],yend=p3_v[2])) +
+  geom_segment(aes(x=p3_v[1],y=p3_v[2],xend=p0[1],yend=p0[2])) +
+  theme_bw() + xlim(-15,15) + ylim(-5,25) + labs(x="x",y="y")
+
+```
 
 ## Part b
 Use the following to generate a new shape. Compare the shape and its area to your answer in Questions 1 and the vertical shear transform in part (a).
 $$ \mathbf{M}_h = \begin{bmatrix} 1 & 0 \\ k=0.5 & 1 \end{bmatrix}~~~~~ \textrm{and} ~~~~~
   \mathbf{A}   = \begin{bmatrix} 1 & -7 \\ 5 & 9 \end{bmatrix}$$
 
+**Solution**
+```{r}
+Mh <- matrix(c(1, 0, k, 1), nrow=2, byrow=TRUE)
+T_h <- A %*% Mh
+basis.vector.1_h <- T_h[,1]
+basis.vector.2_h <- T_h[,2]
+p1_h <- basis.vector.1_h; p2_h <- basis.vector.1_h + basis.vector.2_h; p3_h <- basis.vector.2_h
+det(Mh)
+
+#| label: fig-q3b
+#| fig-cap: "Horizontal shear."
+#| fig-width: 3.5
+#| fig-height: 3.5
+#| scale: 0.8
+#| fig-align: center
+ggplot() +
+  geom_segment(aes(x=p0[1],y=p0[2],xend=p1_h[1],yend=p1_h[2])) +
+  geom_segment(aes(x=p1_h[1],y=p1_h[2],xend=p2_h[1],yend=p2_h[2])) +
+  geom_segment(aes(x=p2_h[1],y=p2_h[2],xend=p3_h[1],yend=p3_h[2])) +
+  geom_segment(aes(x=p3_h[1],y=p3_h[2],xend=p0[1],yend=p0[2])) +
+  theme_bw() + xlim(-15,15) + ylim(-5,25) + labs(x="x",y="y")
+
+```
+
 ## Part c
 Can we shear vertically and horizontally at the same time? Use the following to generate a new shape. Compare the shape and its area to your answers in parts (a) and (b).
 $$\mathbf{M}_{vh} = \begin{bmatrix} 1 & k=0.5 \\ k=0.5 & 1 \end{bmatrix} ~~~~~ \textrm{and} ~~~~~
   \mathbf{A}   = \begin{bmatrix} 1 & -7 \\ 5 & 9 \end{bmatrix}$$
+
+**Solution**
+```{r}
+Mvh <- matrix(c(1, k, k, 1), nrow=2, byrow=TRUE)
+T_vh <- A %*% Mvh
+basis.vector.1_vh <- T_vh[,1]
+basis.vector.2_vh <- T_vh[,2]
+p1_vh <- basis.vector.1_vh; p2_vh <- basis.vector.1_vh + basis.vector.2_vh; p3_vh <- basis.vector.2_vh
+det(Mvh)
+
+#| label: fig-q3c
+#| fig-cap: "Vertical + horizontal shear."
+#| fig-width: 3.5
+#| fig-height: 3.5
+#| scale: 0.8
+#| fig-align: center
+ggplot() +
+  geom_segment(aes(x=p0[1],y=p0[2],xend=p1_vh[1],yend=p1_vh[2])) +
+  geom_segment(aes(x=p1_vh[1],y=p1_vh[2],xend=p2_vh[1],yend=p2_vh[2])) +
+  geom_segment(aes(x=p2_vh[1],y=p2_vh[2],xend=p3_vh[1],yend=p3_vh[2])) +
+  geom_segment(aes(x=p3_vh[1],y=p3_vh[2],xend=p0[1],yend=p0[2])) +
+  theme_bw() + xlim(-15,15) + ylim(-5,25) + labs(x="x",y="y")
+
+```
 
 # Question 4
 
@@ -205,11 +400,43 @@ Create a data frame `ladder` with the following data. Note your data frame shoul
 | 1    | 6    |    5 | 0    | 18   |   11 |
 | 0    | 8    |    6 | 1    | 18   |   11 |
 
+**Solution**
+```{r}
+ladder <- data.frame(
+  x = c(0,0,1,1,0,1,0,1,0,1,0,1,1,0,1,0,1,0,1,0,1,0),
+  y = c(0,20,0,20,2,2,4,4,6,6,8,8,8,10,10,10,12,12,14,14,16,16),
+  group = c(1,1,2,2,3,3,4,4,5,5,6,6,6,7,7,7,8,8,9,9,10,10)
+)
+# Add final row from table
+ladder <- rbind(ladder, data.frame(x=1, y=18, group=11))
+ladder
+
+
+
+```
+
 ## Part b
 Remove `#|eval: false` in the code below. The result should look like a ladder and a very rectangular house if part a is correct.
 
 ```{r}
-#| eval: false
+#| label: fig-ladder-soln
+#| fig-cap: "Ladder and house."
+#| fig-width: 3
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+ggplot() +
+  geom_path(data = ladder, aes(x = x, y = y, group = group)) +
+  geom_segment(aes(x = 10, xend = 10, y = 0, yend = 20)) +
+  geom_segment(aes(x = 10, xend = 20, y = 20, yend = 20)) +
+  geom_segment(aes(x = 20, xend = 20, y = 0, yend = 20)) +
+  geom_segment(aes(x = 10, xend = 20, y = 0, yend = 0)) +
+  theme_bw() + xlim(-2,22) + ylim(-2,22)
+```
+
+**Solution**
+```{r}
+
 #| label: fig-ladder
 #| fig-cap: "A ladder."
 #| fig-width: 3
@@ -240,8 +467,36 @@ Recall,
 $$\mathbf{M}_h = \begin{bmatrix} 1 & 0 \\ k & 1 \end{bmatrix}$$
 and use $k=0.5.$
 
+**Solution**
+```{r}
+# Ladder data frame from Part a (22 obs x 3 cols) [file:4]
+ladder <- data.frame(
+  x = c(0, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0),
+  y = c(0,20, 0,20, 2, 2, 4, 4, 6, 6, 8, 8, 8,10,10,10,12,12,14,14,16,16),
+  group = c(1,1,2,2,3,3,4,4,5,5,6,6,6,7,7,7,8,8,9,9,10,10)
+)  # Matches table pattern; add last row separately if needed
+
+A <- as.matrix(ladder[, c("x", "y")])  # 22 x 2 matrix
+dim(A)
+k <- 0.5
+Mh <- matrix(c(1, 0, k, 1), nrow=2, byrow=TRUE)
+T <- A %*% Mh
+
+```
+
 ## Part d
 Create a data frame `leaning.ladder` with the `x` and `y` equal to the first and second column of $\mathbf{T}$, respectively, and the same values of `group` from `ladder`. 
+
+**Solution**
+```{r}
+leaning.ladder <- data.frame(
+  x = T[,1],
+  y = T[,2],
+  group = ladder$group
+)
+head(leaning.ladder)
+
+```
 
 ## Part e
 Remove `eval: false` in the code below. The result should look like a ladder and a very rectangular house if part a is correct. The new leaning ladder should look like it is leaning on the house.
@@ -272,4 +527,23 @@ ggplot() +
   xlim(-2,22) +
   ylim(-2,22) +
   scale_color_manual("", values=c("darkred", "grey"))
+```
+**Solution**
+```{r}
+#| label: fig-ladder2-soln
+#| fig-cap: "Ladder and leaning ladder."
+#| fig-width: 3
+#| fig-height: 3
+#| scale: "80%"
+#| fig-align: "center"
+ggplot() +
+  geom_path(data = ladder, aes(x = x, y = y, group = group, color = "Starting Ladder")) +
+  geom_path(data = leaning.ladder, aes(x = x, y = y, group = group, color = "Leaning Ladder")) +
+  geom_segment(aes(x = 10, xend = 10, y = 0, yend = 20)) +
+  geom_segment(aes(x = 10, xend = 20, y = 20, yend = 20)) +
+  geom_segment(aes(x = 20, xend = 20, y = 0, yend = 20)) +
+  geom_segment(aes(x = 10, xend = 20, y = 0, yend = 0)) +
+  theme_bw() + xlim(-2,22) + ylim(-2,22) +
+  scale_color_manual("", values = c("darkred", "grey"))
+
 ```
